@@ -7,7 +7,6 @@
                 "C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/**",
                 "C:/Users/kevin/AppData/Local/Arduino15/packages/esp32/hardware/esp32/2.0.4/tools/sdk/esp32c3/include/esp_system/**",
                 "C:/Users/kevin/문서/Arduino/libraries/**"
-                
             ],
             "defines": [
                 "_DEBUG",

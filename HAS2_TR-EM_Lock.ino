@@ -12,9 +12,14 @@
 
 void setup(void) {
   Serial.begin(115200);
+  NeopixelInit();
+  RfidInit();
   em_init();
+  wifi_connect();
 }
 
 void loop(void) {
+  WifiTimer.run();
+  wifi_detect_change();
   game_ptr();
 }

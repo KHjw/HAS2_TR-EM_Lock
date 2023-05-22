@@ -2,7 +2,9 @@
 
 #include <Adafruit_PN532.h>
 #include <Adafruit_NeoPixel.h>
+
 #include <HAS2_Wifi.h>
+#include <SimpleTimer.h>
 
 #define PN532_SCK     18
 #define PN532_MISO    19

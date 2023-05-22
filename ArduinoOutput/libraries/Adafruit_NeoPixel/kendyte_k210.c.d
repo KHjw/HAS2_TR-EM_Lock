@@ -1,2 +1,2 @@
 c:\Github\HAS2_TR-EM_Lock\ArduinoOutput\libraries\Adafruit_NeoPixel\kendyte_k210.c.o: \
- C:\Users\kevin\OneDrive\문서\Arduino\speakerSelector_arduino\libraries\Adafruit_NeoPixel\kendyte_k210.c
+ C:\Users\kevin\OneDrive\문서\Arduino\libraries\Adafruit_NeoPixel\kendyte_k210.c

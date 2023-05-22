@@ -1,6 +1,6 @@
 c:\Github\HAS2_TR-EM_Lock\ArduinoOutput\libraries\Adafruit_NeoPixel\Adafruit_NeoPixel.cpp.o: \
- C:\Users\kevin\OneDrive\문서\Arduino\speakerSelector_arduino\libraries\Adafruit_NeoPixel\Adafruit_NeoPixel.cpp \
- C:\Users\kevin\OneDrive\문서\Arduino\speakerSelector_arduino\libraries\Adafruit_NeoPixel\Adafruit_NeoPixel.h \
+ C:\Users\kevin\OneDrive\문서\Arduino\libraries\Adafruit_NeoPixel\Adafruit_NeoPixel.cpp \
+ C:\Users\kevin\OneDrive\문서\Arduino\libraries\Adafruit_NeoPixel\Adafruit_NeoPixel.h \
  C:\Users\kevin\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.4\cores\esp32/Arduino.h \
  C:\Users\kevin\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.4\cores\esp32/esp_arduino_version.h \
  C:\Users\kevin\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.4/tools/sdk/esp32/include/freertos/include/freertos/FreeRTOS.h \

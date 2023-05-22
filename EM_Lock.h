@@ -8,7 +8,7 @@ Adafruit_PN532 nfc(PN532_SCK, PN532_MISO, PN532_MOSI, PN532_SS);
 
 void RfidInit();
 void RfidLoop();
-void Rfid_Identify();
+void Rfid_Identify(uint8_t data[32]);
 void RfidCheckLoop();
 
 String RfidID = "";
@@ -16,7 +16,7 @@ String RfidID = "";
 
 //****************************************Neopixel SETUP**************************************************
 void NeopixelInit();
-void NeoShowColor(int color_code);
+void NeoShowColor(int neo_code ,int color_code);
 
 Adafruit_NeoPixel indicator_neo(INDICATOR_NEONUM,INDICATOR_NEOPIN,NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel em_state_neo(EM_STATE_NEONUM,EM_STATE_NEOPIN,NEO_GRB + NEO_KHZ800);
@@ -41,12 +41,36 @@ void em_init();
 
 int EM_state = 0;
 
+enum {LOCK = 0, OPEN};     // EM 정보
+enum {INDICATOR = 0, EM_STATE};     // EM 정보
 
 //****************************************Game System SETUP**************************************************
-void device_init();
+void device_open();
+void device_lock();
+void device_setting();
+void device_ready();
+void device_void();
 
-void (*game_ptr)() = &device_init;
+int current_state = 7;
 
+void (*game_ptr)() = device_setting;
 
+//****************************************WiFi SETUP**************************************************
+HAS2_Wifi HAS2wifi;
 
+String current_Gstate = "";
+String current_Dstate = "";
+
+void wifi_connect();
+void wifi_detect_change();
+void wifi_state_update();
+
+void wifi_Gstate_appl();
+void wifi_Dstate_appl();
+void wifi_Dstate_send(String Dstate);
+
+//****************************************Timer SETUP**************************************************
+SimpleTimer WifiTimer; 
+
+int WifiTimer_ID;
 #endif

@@ -1,6 +1,6 @@
 c:\Github\HAS2_TR-EM_Lock\ArduinoOutput\libraries\HAS2_Wifi\HAS2_Wifi.cpp.o: \
- C:\Users\kevin\OneDrive\문서\Arduino\speakerSelector_arduino\libraries\HAS2_Wifi\HAS2_Wifi.cpp \
- C:\Users\kevin\OneDrive\문서\Arduino\speakerSelector_arduino\libraries\HAS2_Wifi\HAS2_Wifi.h \
+ C:\Users\kevin\OneDrive\문서\Arduino\libraries\HAS2_Wifi\HAS2_Wifi.cpp \
+ C:\Users\kevin\OneDrive\문서\Arduino\libraries\HAS2_Wifi\HAS2_Wifi.h \
  C:\Users\kevin\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.4\cores\esp32/Arduino.h \
  C:\Users\kevin\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.4\cores\esp32/esp_arduino_version.h \
  C:\Users\kevin\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.4/tools/sdk/esp32/include/freertos/include/freertos/FreeRTOS.h \
@@ -229,6 +229,11 @@ c:\Github\HAS2_TR-EM_Lock\ArduinoOutput\libraries\HAS2_Wifi\HAS2_Wifi.cpp.o: \
  C:\Users\kevin\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.4/tools/sdk/esp32/include/mbedtls/port/include/aes/esp_aes.h \
  C:\Users\kevin\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.4/tools/sdk/esp32/include/hal/include/hal/aes_types.h \
  C:\Users\kevin\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.4/tools/sdk/esp32/include/mbedtls/mbedtls/include/mbedtls/error.h \
- C:\Users\kevin\OneDrive\문서\Arduino\speakerSelector_arduino\libraries\ArduinoJson\src/ArduinoJson.h \
- C:\Users\kevin\OneDrive\문서\Arduino\speakerSelector_arduino\libraries\ArduinoJson\src/ArduinoJson.hpp \
- C:\Users\kevin\OneDrive\문서\Arduino\speakerSelector_arduino\libraries\ArduinoJson\src/ArduinoJson/Configuration.hpp
+ C:\Users\kevin\OneDrive\문서\Arduino\libraries\ArduinoJson\src/ArduinoJson.h \
+ C:\Users\kevin\OneDrive\문서\Arduino\libraries\ArduinoJson\src/ArduinoJson.hpp \
+ C:\Users\kevin\OneDrive\문서\Arduino\libraries\ArduinoJson\src/ArduinoJson/Configuration.hpp \
+ C:\Users\kevin\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.4\libraries\HTTPUpdate\src/HTTPUpdate.h \
+ C:\Users\kevin\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.4\libraries\WiFi\src/WiFiUdp.h \
+ C:\Users\kevin\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.4\libraries\Update\src/Update.h \
+ C:\Users\kevin\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.4\cores\esp32/MD5Builder.h \
+ C:\Users\kevin\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.4/tools/sdk/esp32/include/esp_rom/include/esp_rom_md5.h
