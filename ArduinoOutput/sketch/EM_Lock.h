@@ -54,7 +54,7 @@ void device_void();
 
 int current_state = 7;
 
-void (*game_ptr)() = &device_setting;
+void (*game_ptr)() = device_setting;
 
 //****************************************WiFi SETUP**************************************************
 HAS2_Wifi HAS2wifi;
@@ -74,4 +74,5 @@ void wifi_Dstate_send(String Dstate);
 SimpleTimer WifiTimer; 
 
 int WifiTimer_ID;
+
 #endif

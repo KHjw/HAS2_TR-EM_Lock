@@ -12,14 +12,16 @@
 
 void setup(void) {
   Serial.begin(115200);
-  NeopixelInit();
-  RfidInit();
-  em_init();
+  Serial.println("=============================ESP SETUP=============================");
   wifi_connect();
+  TimerInit();
+  em_init();
+  RfidInit();
+  NeopixelInit();
+  Serial.println("===================================================================");
 }
 
 void loop(void) {
   WifiTimer.run();
-  wifi_detect_change();
   game_ptr();
 }

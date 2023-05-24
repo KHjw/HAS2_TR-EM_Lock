@@ -14,32 +14,17 @@ void RfidInit(){
 }
 
 void RfidLoop(){
-  uint8_t success;
+  Serial.println("RFID Loop");
   uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };  // Buffer to store the returned UID
-  uint8_t uidLength;                        // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
+  uint8_t data[32];
 
-  success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength);
- 
-  if (success) {
-    if (uidLength == 7)
-    {
-      uint8_t data[32];
-
-      Serial.print("NTAG2xx tag Detected : ");     
-
-      success = nfc.ntag2xx_ReadPage(7, data); 
-
-      if (success) 
-      {
-        Rfid_Identify(data);
-      }
+  if(nfc.startPassiveTargetIDDetection(PN532_MIFARE_ISO14443A)){
+    if (nfc.ntag2xx_ReadPage(7, data)) {
+      Rfid_PlayerData(data);
+      // Rfid_Identify(data);
     }
-    else
-    {
-      Serial.println("This doesn't seem to be an NTAG203 tag");
-    }
-    Serial.flush();    
   }
+  Serial.flush();    
   delay (50);
 }
 
@@ -47,7 +32,7 @@ void Rfid_Identify(uint8_t data[32]){
   for(int i=0; i<4; i++){
     RfidID += (char)data[i];
   }
-
+  Serial.print("Player tag Detected : ");
   if(RfidID == "G1P7")
   {
     Serial.println("G1P7");
@@ -66,30 +51,35 @@ void Rfid_Identify(uint8_t data[32]){
   RfidID = "";
 }
 
-void RfidCheckLoop(){
-  uint8_t success;
-  uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };  // Buffer to store the returned UID
-  uint8_t uidLength;                        // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
-    
-  success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength);
-  
-  if (success) {
-    if (uidLength == 7)
-    {
-      uint8_t data[32];
-      success = nfc.ntag2xx_ReadPage(7, data); 
-      if (success) 
-      {
-        Serial.print("NTAG2xx tag Detected");
-
-        //
-      }
-    }
-    else
-    {
-      Serial.println("This doesn't seem to be an NTAG203 tag");
-    }
-    Serial.flush();    
+void Rfid_PlayerData(uint8_t data[32]){
+  for(int i=0; i<4; i++){
+    RfidID += (char)data[i];
   }
-  delay (50);
+  if(RfidID == "MMMM"){
+    Serial.println("Master Card Detected");
+    game_ptr = device_open;
+  }
+
+  Serial.println("Player tag Detected : " + RfidID);
+  HAS2wifi.Receive(RfidID);  
+  if((String)(const char*)tag["role"] == "player"){
+    Serial.println("Role :: Player");
+    NeoShowColor(INDICATOR, GREEN);
+    game_ptr = device_lock;
+  }
+  else if((String)(const char*)tag["role"] == "tagger"){
+    Serial.println("Role :: Tagger");
+    NeoShowColor(INDICATOR, PURPLE);
+    game_ptr = device_open;
+  }
+  else if((String)(const char*)tag["role"] == "ghost"){
+    Serial.println("Role :: Ghost");
+    NeoShowColor(INDICATOR, BLUE);
+    game_ptr = device_open;
+  }
+  else{
+    Serial.println("Unidentified Chip");
+  }
+
+  RfidID = "";
 }

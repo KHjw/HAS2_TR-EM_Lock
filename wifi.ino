@@ -1,9 +1,12 @@
 void wifi_connect(){
   HAS2wifi.Setup("KT_GiGA_6C64", "ed46zx1198");
   // HAS2wifi.Setup("city");
+  // HAS2wifi.ReceiveMine();
+  wifi_state_update();
 }
 
 void wifi_detect_change(){
+  Serial.println("----Timer----");
   HAS2wifi.Loop(wifi_state_update);
 }
 

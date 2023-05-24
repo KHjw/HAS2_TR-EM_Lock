@@ -21,15 +21,17 @@
 
 void setup(void) {
   Serial.begin(115200);
-  NeopixelInit();
-  RfidInit();
-  em_init();
+  Serial.println("=============================ESP SETUP=============================");
   wifi_connect();
+  TimerInit();
+  em_init();
+  RfidInit();
+  NeopixelInit();
+  Serial.println("===================================================================");
 }
 
 void loop(void) {
   WifiTimer.run();
-  wifi_detect_change();
   game_ptr();
 }
 # 1 "c:\\Github\\HAS2_TR-EM_Lock\\emlock.ino"
@@ -88,17 +90,29 @@ void device_ready(){
   Serial.println("STATE :: Device Ready");
   em_control(1);
   NeoShowColor(INDICATOR, RED);
-  game_ptr = &device_void;
+  game_ptr = device_void;
 }
 
 void device_activate(){
   Serial.println("STATE :: Device Activate");
   em_control(0);
   NeoShowColor(INDICATOR, YELLOW);
-  game_ptr = &RfidLoop;
+  game_ptr = RfidLoop;
 }
 
 void device_void(){
+}
+
+void device_Mopen(){
+  if(current_Dstate != "open"){
+    wifi_Dstate_send("open");
+    current_Dstate = "open";
+    Serial.println("STATE :: Device Open");
+    em_control(1);
+    delay(500);
+  }
+  Serial.println("RFID Detecting");
+  game_ptr = RfidLoop;
 }
 # 1 "c:\\Github\\HAS2_TR-EM_Lock\\neopixel.ino"
 void NeopixelInit(){
@@ -143,32 +157,17 @@ void RfidInit(){
 }
 
 void RfidLoop(){
-  uint8_t success;
+  Serial.println("RFID Loop");
   uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 }; // Buffer to store the returned UID
-  uint8_t uidLength; // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
+  uint8_t data[32];
 
-  success = nfc.readPassiveTargetID((0x00), uid, &uidLength);
-
-  if (success) {
-    if (uidLength == 7)
-    {
-      uint8_t data[32];
-
-      Serial.print("NTAG2xx tag Detected : ");
-
-      success = nfc.ntag2xx_ReadPage(7, data);
-
-      if (success)
-      {
-        Rfid_Identify(data);
-      }
+  if(nfc.startPassiveTargetIDDetection((0x00))){
+    if (nfc.ntag2xx_ReadPage(7, data)) {
+      Rfid_PlayerData(data);
+      // Rfid_Identify(data);
     }
-    else
-    {
-      Serial.println("This doesn't seem to be an NTAG203 tag");
-    }
-    Serial.flush();
   }
+  Serial.flush();
   delay (50);
 }
 
@@ -176,63 +175,71 @@ void Rfid_Identify(uint8_t data[32]){
   for(int i=0; i<4; i++){
     RfidID += (char)data[i];
   }
-
+  Serial.print("Player tag Detected : ");
   if(RfidID == "G1P7")
   {
     Serial.println("G1P7");
-    game_ptr = &device_lock;
+    game_ptr = device_lock;
   }
   else if(RfidID == "G1P9")
   {
     Serial.println("G1P9");
-    game_ptr = &device_open;
+    game_ptr = device_open;
   }
   else{
     Serial.print("Unidentified Chip :: ");
     Serial.println(RfidID);
-    // game_ptr = &RfidLoop;
+    // game_ptr = RfidLoop;
   }
   RfidID = "";
 }
 
-void RfidCheckLoop(){
-  uint8_t success;
-  uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 }; // Buffer to store the returned UID
-  uint8_t uidLength; // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
-
-  success = nfc.readPassiveTargetID((0x00), uid, &uidLength);
-
-  if (success) {
-    if (uidLength == 7)
-    {
-      uint8_t data[32];
-      success = nfc.ntag2xx_ReadPage(7, data);
-      if (success)
-      {
-        Serial.print("NTAG2xx tag Detected");
-
-        //
-      }
-    }
-    else
-    {
-      Serial.println("This doesn't seem to be an NTAG203 tag");
-    }
-    Serial.flush();
+void Rfid_PlayerData(uint8_t data[32]){
+  for(int i=0; i<4; i++){
+    RfidID += (char)data[i];
   }
-  delay (50);
+  if(RfidID == "MMMM"){
+    Serial.println("Master Card Detected");
+    game_ptr = device_open;
+  }
+
+  Serial.println("Player tag Detected : " + RfidID);
+  HAS2wifi.Receive(RfidID);
+  if((String)(const char*)tag["role"] == "player"){
+    Serial.println("Role :: Player");
+    NeoShowColor(INDICATOR, GREEN);
+    game_ptr = device_lock;
+  }
+  else if((String)(const char*)tag["role"] == "tagger"){
+    Serial.println("Role :: Tagger");
+    NeoShowColor(INDICATOR, PURPLE);
+    game_ptr = device_open;
+  }
+  else if((String)(const char*)tag["role"] == "ghost"){
+    Serial.println("Role :: Ghost");
+    NeoShowColor(INDICATOR, BLUE);
+    game_ptr = device_open;
+  }
+  else{
+    Serial.println("Unidentified Chip");
+  }
+
+  RfidID = "";
 }
 # 1 "c:\\Github\\HAS2_TR-EM_Lock\\timer.ino"
 void TimerInit(){
-  WifiTimer_ID = WifiTimer.setInterval(1000, wifi_state_update);
+  WifiTimer_ID = WifiTimer.setInterval(1000, wifi_detect_change);
 }
 # 1 "c:\\Github\\HAS2_TR-EM_Lock\\wifi.ino"
 void wifi_connect(){
   HAS2wifi.Setup("KT_GiGA_6C64", "ed46zx1198");
   // HAS2wifi.Setup("city");
+  // HAS2wifi.ReceiveMine();
+  wifi_state_update();
 }
 
 void wifi_detect_change(){
+  Serial.println("----Timer----");
   HAS2wifi.Loop(wifi_state_update);
 }
 
@@ -246,15 +253,15 @@ void wifi_Gstate_appl(){
     Serial.print("Game State :: ");
     if((String)(const char*)my["game_state"] == "setting"){
       Serial.println("Setting");
-      game_ptr = &device_setting;
+      game_ptr = device_setting;
     }
     else if((String)(const char*)my["game_state"] == "ready"){
       Serial.println("Ready");
-      game_ptr = &device_ready;
+      game_ptr = device_ready;
     }
     else if((String)(const char*)my["game_state"] == "activate"){
       Serial.println("Activate");
-      game_ptr = &device_activate;
+      game_ptr = device_activate;
     }
     current_Gstate = (String)(const char*)my["game_state"];
   }
@@ -265,23 +272,23 @@ void wifi_Dstate_appl(){
     Serial.print("Device State :: ");
     if((String)(const char*)my["device_state"] == "setting"){
       Serial.println("Setting");
-      game_ptr = &device_setting;
+      game_ptr = device_setting;
     }
     else if((String)(const char*)my["device_state"] == "ready"){
       Serial.println("Ready");
-      game_ptr = &device_ready;
+      game_ptr = device_ready;
     }
     else if((String)(const char*)my["device_state"] == "activate"){
       Serial.println("Activate");
-      game_ptr = &device_activate;
+      game_ptr = device_activate;
     }
     else if((String)(const char*)my["device_state"] == "open"){
       Serial.println("Open");
-      game_ptr = &device_open;
+      game_ptr = device_open;
     }
     else if((String)(const char*)my["device_state"] == "lock"){
       Serial.println("Lock");
-      game_ptr = &device_lock;
+      game_ptr = device_lock;
     }
     else if((String)(const char*)my["device_state"] == "player_win"){
 

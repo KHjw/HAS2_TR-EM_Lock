@@ -45,3 +45,16 @@ void device_activate(){
 
 void device_void(){
 }
+
+void device_Mopen(){
+  if(current_Dstate != "open"){
+    wifi_Dstate_send("open");
+    current_Dstate = "open";
+    Serial.println("STATE :: Device Open");
+    em_control(1);
+    delay(500);
+  }
+  Serial.println("RFID Detecting");
+  game_ptr = RfidLoop;
+}
+
